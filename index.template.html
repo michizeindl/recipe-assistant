@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dein Ernährungsprofil, vollständige Mahlzeiten und eine Einkaufsliste. Berechne auch mit offenen Angaben und sieh alle Annahmen.">
+  <meta name="theme-color" content="#234d39">
+  <title>Recipe Assistant · Deine Woche, dein Geschmack</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Zum Inhalt</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Hauptnavigation">
+      <a class="brand" href="#profil"><span class="brand-mark" aria-hidden="true">r.</span><span>Recipe<br>Assistant</span></a>
+      <div class="side-caption">GUT ESSEN. EINFACH PLANEN.</div>
+      <nav class="main-nav" aria-label="Ansichten">
+        <button class="nav-button active" data-view="profil" aria-current="page"><span class="nav-symbol" aria-hidden="true">01</span>Mein Profil</button>
+        <button class="nav-button" data-view="woche"><span class="nav-symbol" aria-hidden="true">02</span>Meine Woche</button>
+        <button class="nav-button" data-view="rezepte"><span class="nav-symbol" aria-hidden="true">03</span>Rezepte entdecken</button>
+        <button class="nav-button" data-view="einkauf"><span class="nav-symbol" aria-hidden="true">04</span>Einkaufsliste</button>
+      </nav>
+      <div class="side-note"><span class="tiny-label">DEIN TEMPO</span><p>Du kannst sofort loslegen. Offene Angaben ergänzen wir durch sichtbare Annahmen.</p><button id="sidebar-calculate" class="button primary">Woche berechnen <span aria-hidden="true">↗</span></button></div>
+      <div class="privacy-note"><span class="status-dot" aria-hidden="true"></span>Profil bleibt in deinem Browser.<br><span>Speichern nur auf Wunsch.</span></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><span class="crumb" id="breadcrumb">Deine Planung / Mein Profil</span><div class="top-actions"><span class="local-badge">Ohne Konto nutzbar</span><button id="save-profile" class="text-button">Profil merken</button><button id="open-data" class="text-button">Daten</button></div></header>
+      <main id="main">
+        <section id="view-profil" class="view" aria-labelledby="profile-title">
+          <div class="hero"><div><span class="eyebrow">DAS PASST ZU DIR</span><h1 id="profile-title">Deine Woche.<br><em>Dein Geschmack.</em></h1><p>Ein paar Angaben, gute Mahlzeiten, ein klarer Einkauf.<br>Fang dort an, wo du gerade bist.</p></div><div class="hero-stamp"><span>9</span><div>kleine Bereiche.<br>Ein Plan für dich.</div></div></div>
+          <div class="profile-layout"><div class="profile-main"><!--PROFILE--></div><aside class="profile-guide"><span class="tiny-label">SO ENTSTEHT DEIN PLAN</span><ol><li><strong>Erzähl von dir</strong><span>Vorlieben, Alltag und das, was du schon zu Hause hast.</span></li><li><strong>Lass dir eine Woche zusammenstellen</strong><span>Auch wenn noch Angaben fehlen.</span></li><li><strong>Koch, wie es dir passt</strong><span>Mit vollständigen Mahlzeiten und einer gemeinsamen Einkaufsliste.</span></li></ol><div class="guide-note">Allergien sind immer wichtiger als Vorlieben oder Resteverwertung.</div><div class="guide-foot">Keine Diagnose. Energie- und Nährwertangaben sind Schätzungen.</div></aside></div>
+        </section>
+        <section id="view-woche" class="view" hidden aria-labelledby="week-title">
+          <div class="page-heading"><div><span class="eyebrow">GUT DURCH DIE WOCHE</span><h1 id="week-title">Dein Wochenplan</h1><p>Ein kompletter Teller. Und Platz für deinen Alltag.</p></div><div class="action-row"><button id="regenerate" class="button">Neu zusammenstellen</button><button id="download-plan" class="button primary">Plan herunterladen</button><button id="print-plan" class="button">Drucken</button></div></div>
+          <div id="plan-empty" class="empty-state"><h2>Deine Woche wartet auf dich.</h2><p>Du brauchst kein vollständiges Profil. Berechne jetzt einen ersten Vorschlag.</p><button class="button primary" id="empty-calculate">Ersten Plan berechnen</button></div>
+          <div id="plan-content" hidden><div id="energy-summary" class="energy-summary"></div><div id="plan-conclusion" class="plan-conclusion"></div><details id="assumptions-box" class="assumptions"><summary id="assumptions-title">Annahmen und offene Angaben</summary><div id="assumptions-list"></div></details><div id="plan-issues" class="plan-issues" role="status"></div><div id="day-tabs" class="day-tabs" role="tablist" aria-label="Wochentag"></div><div id="day-panel" role="tabpanel"></div><div id="week-balance" class="week-balance"></div></div>
+        </section>
+        <section id="view-rezepte" class="view" hidden aria-labelledby="recipe-title"><div class="page-heading"><div><span class="eyebrow">AUS DEINER REZEPTSAMMLUNG</span><h1 id="recipe-title">Was darf’s sein?</h1><p>4.000 Rezepte zum Stöbern. Berechenbare Mahlzeiten sind extra gekennzeichnet.</p></div></div><div class="recipe-filters"><label>Rezept suchen<input type="search" id="recipe-search" placeholder="Zum Beispiel Pasta, Suppe oder Kartoffeln"></label><label>Küchenrichtung<select id="recipe-cuisine"><option value="">Alle Küchen</option></select></label><label class="inline-check"><input type="checkbox" id="calculable-only">Nur berechenbare Mahlzeiten</label></div><p id="recipe-count" class="muted" aria-live="polite"></p><div id="recipe-grid" class="recipe-grid"></div><button id="more-recipes" class="button" hidden>Weitere Rezepte anzeigen</button></section>
+        <section id="view-einkauf" class="view" hidden aria-labelledby="shopping-title"><div class="page-heading"><div><span class="eyebrow">ALLES AUF EINER LISTE</span><h1 id="shopping-title">Dein Einkauf</h1><p>Rezept, Beilage und Ergänzungen zusammengezählt.</p></div><button id="download-shopping" class="button primary">Liste herunterladen</button></div><div id="shopping-empty" class="empty-state"><p>Berechne zuerst deine Woche. Daraus entsteht deine Einkaufsliste.</p><button id="shopping-calculate" class="button primary">Woche berechnen</button></div><div id="shopping-content" hidden><div class="shopping-intro" id="shopping-intro"></div><div class="shopping-progress"><span id="shopping-progress-label"></span><button id="uncheck-shopping" class="text-button">Häkchen zurücksetzen</button></div><div id="shopping-list" class="shopping-list"></div><p class="muted">Zusätzlich nach Geschmack: Jodsalz, Pfeffer, Kräuter und passende Gewürze. Unbekannte Vorratsmengen werden nicht abgezogen.</p></div></section>
+      </main>
+      <footer><span>Recipe Assistant</span><button id="about-data" class="text-button">Quellen &amp; Berechnung</button><span>Bewusst planen. Gut essen.</span></footer>
+    </div>
+  </div>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="detail-dialog"><div class="dialog-heading"><h2 id="dialog-title"></h2><button id="close-dialog" class="close-button" aria-label="Schließen">×</button></div><div id="dialog-body"></div></dialog>
+  <dialog id="data-dialog"><div class="dialog-heading"><h2>Deine Daten</h2><button id="close-data" class="close-button" aria-label="Schließen">×</button></div><p>Deine Eingaben werden im Browser verarbeitet. Es werden keine Profildaten an einen Server gesendet. „Profil merken“ speichert sie auf diesem Gerät.</p><div class="stack"><button id="export-profile" class="button">Profil als JSON herunterladen</button><label class="button file-button">Gespeichertes Profil laden<input id="import-profile" type="file" accept="application/json,.json"></label><button id="forget-profile" class="button danger">Gespeichertes Profil von diesem Gerät löschen</button></div><p id="storage-status" class="muted"></p></dialog>
+  <noscript><div class="noscript">Bitte JavaScript aktivieren. Die Berechnung läuft direkt in deinem Browser.</div></noscript>
+</body>
+</html>
