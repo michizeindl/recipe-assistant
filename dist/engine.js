@@ -1,6 +1,6 @@
 import {foods,recipes} from './data.js';
 export const days=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
-export const slots=['Frühstück','Mittagessen','Abendessen','Snacks'];
+export const slots=['Mittagessen','Abendessen','Snacks'];
 export const foodNames=['Rindfleisch','Schweinefleisch','Geflügel','Lamm','Fisch','Meeresfrüchte','Eier','Milchprodukte','Hülsenfrüchte','Gemüse','Obst','Kartoffeln','Reis','Nudeln'];
 export const cuisineNames=['Hausmannskost','Italienisch','Französisch','Griechisch','Orientalisch','Chinesisch','Thailändisch','Indisch','Mexikanisch','Amerikanisch'];
 const norm=s=>String(s??'').toLocaleLowerCase('de').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').trim();
@@ -94,7 +94,7 @@ const completeIngredients=recipe=>({...recipe.ingredients});
 const share=recipe=>recipe.eatenShare||{};
 const peopleCount=p=>numeric(p.people,1,20)??1;
 export function planWeek(p,seed=0){
- const energy=calculateEnergy(p),matrix=p.matrixTouched?p.matrix:days.map(()=>[false,true,true,false]);
+ const energy=calculateEnergy(p),matrix=p.matrixTouched?p.matrix:days.map(()=>[true,true,false]);
  const entries=[],issues=[];const use=new Map();let meatTotal=0;let fishMeals=0;
  // Allergy, diet and nutrition checks are done once per recipe and week, not once per meal slot.
  const unresolved=customAllergyUnresolved(p),mapped={...p,allergies:[...(p.allergies||[]),...(p.extraAllergies||[])]};
@@ -112,7 +112,7 @@ export function planWeek(p,seed=0){
  };
  for(let d=0;d<7;d++){
   const active=slots.filter((s,i)=>matrix?.[d]?.[i]);
-  const weights={'Frühstück':.25,'Mittagessen':.35,'Abendessen':.35,'Snacks':.05};
+  const weights={'Mittagessen':.35,'Abendessen':.35,'Snacks':.05};
   const divisor=p.wholeDay===false?1:active.reduce((s,n)=>s+weights[n],0);
   for(const slot of active){
    const desired=energy.target*weights[slot]/divisor;
@@ -162,7 +162,9 @@ export function validateImportedProfile(value){
  for(const k of ['body','movement','foodRatings','cuisineRatings','times'])if(value[k]&&typeof value[k]==='object'&&!Array.isArray(value[k]))p[k]={...p[k],...value[k]};
  for(const k of ['diets','allergies','extraDiets','extraAllergies','extraCuisines'])if(Array.isArray(value[k]))p[k]=value[k].filter(x=>typeof x==='string').slice(0,100).map(x=>x.slice(0,300));
  for(const k of ['snacks','people','budget','leftovers'])if(typeof value[k]==='string'||typeof value[k]==='number')p[k]=String(value[k]).slice(0,2000);
- p.matrix=days.map((_,d)=>slots.map((_,s)=>Boolean(value.matrix?.[d]?.[s])));
+ // Profiles saved before breakfast was removed have four columns; the first one was breakfast.
+ const old=value.matrix?.some?.(row=>Array.isArray(row)&&row.length===4);
+ p.matrix=days.map((_,d)=>slots.map((_,s)=>Boolean(value.matrix?.[d]?.[old?s+1:s])));
  p.matrixTouched=value.matrixTouched===true;p.pantryVisited=value.pantryVisited===true;p.wholeDay=value.wholeDay!==false;
  if(Array.isArray(value.pantry))p.pantry=value.pantry.filter(x=>x&&typeof x.name==='string').slice(0,200).map(x=>({name:x.name.slice(0,200),category:['Grundvorrat','Muss verbraucht werden','Optional vorhanden'].includes(x.category)?x.category:'Optional vorhanden'}));
  p.movement.sport=[0,1,2].map(i=>({frequency:typeof value.movement?.sport?.[i]?.frequency==='string'?value.movement.sport[i].frequency:'Nein',duration:typeof value.movement?.sport?.[i]?.duration==='string'?value.movement.sport[i].duration:'15 Min.'}));

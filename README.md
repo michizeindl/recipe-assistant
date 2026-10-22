@@ -16,7 +16,7 @@ Alternativ im Projektordner `npm start` aufrufen und die angezeigte Adresse öff
 - Berechnung auch ohne vollständige Angaben. Fehlende Körperdaten führen zu einem ausdrücklich benannten Referenzwert, nicht zu erfundenen persönlichen Daten.
 - Energieabschätzung mit Mifflin-St Jeor und grobem Aktivitätsrahmen.
 - 2.626 Rezepte zum Suchen und Lesen (Quelle `2626_rezepte_ergaenzt.xlsx`).
-- 1.821 davon werden im Wochenplan berechnet: Frühstück, Hauptgerichte und Snacks, bei denen jede Zutat einem CoFID-Eintrag zugeordnet ist. Nachspeisen, Beilagen, Grundrezepte, Getränke und Hauptgerichte unter 200 kcal pro Portion sind nur zum Stöbern.
+- 1.759 davon werden im Wochenplan berechnet: Hauptgerichte und Snacks, bei denen jede Zutat einem CoFID-Eintrag zugeordnet ist. Frühstück, Nachspeisen, Beilagen, Grundrezepte, Getränke und Hauptgerichte unter 200 kcal pro Portion sind nur zum Stöbern.
 - Zutatenbasierte Nährwertberechnung: jede Zutatenzeile ist in Lebensmittel, Gramm und verzehrten Anteil zerlegt (`data-src/zutaten.json`), jedes der rund 1.600 Lebensmittel ist einem CoFID-2021-Eintrag mit Art, Allergenen und Kategorie zugeordnet (`data-src/lebensmittel.json`, Feld `Genau` = false bei ähnlichem Ersatzeintrag). Beide Zuordnungen wurden maschinell erstellt und nicht fachlich geprüft.
 - Ausschlüsse für bekannte Allergene einschließlich hinterlegter möglicher Allergene; individuelle ungeklärte Allergien führen zu fehlenden Mahlzeiten statt vorgetäuschter Sicherheit. Die Energieabschätzung bleibt verfügbar.
 - Ernährungsform, Vorlieben, Personenzahl, aktive Mahlzeiten, vorhandene Zutaten und Restelogik werden berücksichtigt.

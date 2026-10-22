@@ -55,3 +55,8 @@ test('Eaten share lowers nutrition for bones and frying oil but not the shopping
  const r=recipes.find(x=>Object.keys(x.eatenShare||{}).length);if(!r)return;const [name,share]=Object.entries(r.eatenShare)[0];
  assert(share>=0&&share<1);
 });
+test('Breakfast is no longer planned; old four-column profiles are migrated',()=>{
+ const p=validateImportedProfile({matrixTouched:true,matrix:[[true,false,true,false],[false,false,false,false],[],[],[],[],[]]});
+ assert.deepEqual(p.matrix[0],[false,true,false]);assert(!recipes.some(r=>r.slots.includes('Frühstück')));
+ const out=planWeek(p);assert(out.entries.every(e=>e.slot!=='Frühstück'));assert.equal(out.entries.length,1);
+});

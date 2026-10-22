@@ -49,7 +49,7 @@ texts = {r[0]: dict(zip(head, r)) for r in rows[head_i + 1:] if r and r[0]}
 
 # --- ingredient mapping ---
 zutaten = json.load(open(src / 'zutaten.json', encoding='utf-8'))
-SLOTS = {'Frühstück': ['Frühstück'], 'Hauptgericht': ['Mittagessen', 'Abendessen'], 'Snack': ['Snacks']}
+SLOTS = {'Hauptgericht': ['Mittagessen', 'Abendessen'], 'Snack': ['Snacks']}
 CUISINE_GROUPS = [  # cuisine names of the profile form -> keywords in the recipe cuisines
     ('Italienisch', ['italien']), ('Französisch', ['franz']), ('Griechisch', ['griech', 'zypr']),
     ('Chinesisch', ['chines', 'taiwan']), ('Thailändisch', ['thail']), ('Indisch', ['indisch', 'ayurved', 'sri-lank', 'südasien']),
@@ -60,7 +60,7 @@ CUISINE_GROUPS = [  # cuisine names of the profile form -> keywords in the recip
 def cuisine_group(c):
     c = (c or '').lower()
     return next((g for g, keys in CUISINE_GROUPS if any(k in c for k in keys)), None)
-MIN_KCAL = {'Hauptgericht': 200, 'Frühstück': 150, 'Snack': 80}  # lighter dishes are sides, not meals
+MIN_KCAL = {'Hauptgericht': 200, 'Snack': 80}  # lighter dishes are sides, not meals
 
 recipes, catalog, skipped = [], [], collections.Counter()
 for z in zutaten:
