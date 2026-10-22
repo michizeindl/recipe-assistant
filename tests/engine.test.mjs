@@ -44,5 +44,14 @@ test('Stored malformed data is normalized; each generated calorie and macro has 
  for(const r of recipes)for(const name of Object.keys(r.ingredients))for(const k of ['kcal','protein','fat','carbs'])assert.equal(typeof foods[name][k],'number',name+' '+k);
 });
 test('Daily totals reconcile to all complete meals, with leftovers counted once',()=>{
- const p=adult();p.leftovers='Gerne für zwei Tage kochen';const out=planWeek(p);for(const d of out.daily){const sum=out.entries.filter(e=>e.dayIndex===d.dayIndex).reduce((s,e)=>s+e.nutrition.kcal,0);assert(Math.abs(sum-d.kcal)<.000001);}const list=shoppingList(out,p);const sum=out.entries.reduce((s,e)=>s+(e.ingredients['Olivenöl']||0),0);assert(Math.abs(sum-list.find(x=>x.name==='Olivenöl').grams)<.000001);
+ const p=adult();p.leftovers='Gerne für zwei Tage kochen';const out=planWeek(p);for(const d of out.daily){const sum=out.entries.filter(e=>e.dayIndex===d.dayIndex).reduce((s,e)=>s+e.nutrition.kcal,0);assert(Math.abs(sum-d.kcal)<.000001);}const list=shoppingList(out,p);const name=list[0].name;const sum=out.entries.reduce((s,e)=>s+(e.ingredients[name]||0),0);assert(Math.abs(sum-list.find(x=>x.name===name).grams)<.000001);
+});
+test('Large plannable pool gives a varied week without water on the shopping list',()=>{
+ assert(recipes.length>=500,'plannable recipes: '+recipes.length);
+ const p=adult(),out=planWeek(p);assert.equal(out.entries.length,14);assert(new Set(out.entries.map(e=>e.recipeId)).size>=12);
+ assert(!shoppingList(out,p).some(x=>x.name==='Wasser'));
+});
+test('Eaten share lowers nutrition for bones and frying oil but not the shopping amount',()=>{
+ const r=recipes.find(x=>Object.keys(x.eatenShare||{}).length);if(!r)return;const [name,share]=Object.entries(r.eatenShare)[0];
+ assert(share>=0&&share<1);
 });

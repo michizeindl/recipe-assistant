@@ -15,9 +15,9 @@ Alternativ im Projektordner `npm start` aufrufen und die angezeigte Adresse öff
 - Neun Profilbereiche entsprechend dem Fragenkatalog; Bereich 1 anfangs geöffnet, Startstatus 0/9.
 - Berechnung auch ohne vollständige Angaben. Fehlende Körperdaten führen zu einem ausdrücklich benannten Referenzwert, nicht zu erfundenen persönlichen Daten.
 - Energieabschätzung mit Mifflin-St Jeor und grobem Aktivitätsrahmen.
-- 4.000 Vollrezepte zum Suchen und Lesen.
-- 18 vorbereitete, berechenbare vollständige Mahlzeiten: 14 Hauptmahlzeiten und vier Frühstücks-/Snackkombinationen. Der große Rezeptbestand wird nicht ohne belastbare Nährwerte automatisch verplant.
-- Zutatenbasierte Nährwertberechnung aus einer dokumentierten CoFID-Auswahl.
+- 2.626 Rezepte zum Suchen und Lesen (Quelle `2626_rezepte_ergaenzt.xlsx`).
+- 1.821 davon werden im Wochenplan berechnet: Frühstück, Hauptgerichte und Snacks, bei denen jede Zutat einem CoFID-Eintrag zugeordnet ist. Nachspeisen, Beilagen, Grundrezepte, Getränke und Hauptgerichte unter 200 kcal pro Portion sind nur zum Stöbern.
+- Zutatenbasierte Nährwertberechnung: jede Zutatenzeile ist in Lebensmittel, Gramm und verzehrten Anteil zerlegt (`data-src/zutaten.json`), jedes der rund 1.600 Lebensmittel ist einem CoFID-2021-Eintrag mit Art, Allergenen und Kategorie zugeordnet (`data-src/lebensmittel.json`, Feld `Genau` = false bei ähnlichem Ersatzeintrag). Beide Zuordnungen wurden maschinell erstellt und nicht fachlich geprüft.
 - Ausschlüsse für bekannte Allergene einschließlich hinterlegter möglicher Allergene; individuelle ungeklärte Allergien führen zu fehlenden Mahlzeiten statt vorgetäuschter Sicherheit. Die Energieabschätzung bleibt verfügbar.
 - Ernährungsform, Vorlieben, Personenzahl, aktive Mahlzeiten, vorhandene Zutaten und Restelogik werden berücksichtigt.
 - Beilagen und Ergänzungen zählen zu Nährwerten und Einkauf. Vorratsmengen ohne Mengenangabe werden nicht abgezogen.
@@ -62,7 +62,7 @@ Private Repositories und die Verfügbarkeit von Pages hängen vom GitHub-Tarif a
 
 `npm test` führt die Tests für fehlende Daten, Energieformel, Allergenausschlüsse auch in Beilagen, vegane Auswahl, ungeklärte individuelle Allergien, leere Wochenmatrix, Personenskalierung, Vorräte, Restemengen und Fleischobergrenze aus.
 
-Die Laufzeit benötigt keine externen Pakete. `prepare_data.py` ist ausschließlich das Entwicklungswerkzeug für den lokalen Projektquellbestand; die fertige App braucht weder Python noch die Ausgangstabellen.
+Die Laufzeit benötigt keine externen Pakete. `build_data.py <rezepte.xlsx> <cofid2021.xlsx>` erzeugt `dist/data.js` und `dist/catalog.json` aus den Dateien in `data-src/`; die fertige App braucht weder Python noch die Ausgangstabellen.
 
 ## Quellen
 
