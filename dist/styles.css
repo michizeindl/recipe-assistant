@@ -9,3 +9,101 @@
 @media(max-width:480px){main{padding:24px 14px}.sidebar{padding-left:14px;padding-right:14px}.topbar{padding-left:14px;padding-right:14px}.hero-stamp{display:none}.hero h1{font-size:2.65rem}.meal-grid,.recipe-grid{grid-template-columns:1fr}.energy-summary{grid-template-columns:1fr}.energy-stat{display:grid;grid-template-columns:1fr auto;gap:3px 12px;border-right:0;border-bottom:1px solid var(--line);padding:14px 18px}.energy-stat:last-child{border-bottom:0}.energy-stat strong{grid-column:2;grid-row:1/3;align-self:center;margin:0}.energy-stat small{grid-column:1}.energy-stat span{align-self:end}.recipe-card{min-height:130px}#ra-profile .ra-head{padding:17px 15px;font-size:.84rem}#ra-profile .ra-panel{padding:0 15px 19px}#ra-profile .ra-rate{grid-template-columns:repeat(5,minmax(30px,1fr))}#ra-profile .ra-rate-label{grid-column:1/-1;margin-top:9px}#ra-profile .ra-rate button{min-height:40px}#ra-profile>.flex:first-child{flex-wrap:wrap;gap:10px}#ra-profile .ra-choice{font-size:.78rem}.top-actions .text-button{font-size:.72rem}.nav-button{min-width:40%;font-size:.74rem}.page-heading{margin-bottom:25px}.day-tabs{gap:5px}.day-tab{min-width:58px;flex:0 1 calc(25% - 5px)}.shopping-item{padding:13px;gap:9px}.dialog-heading h2{font-size:1.4rem}dialog{padding:23px}.meal-grid{gap:15px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 @media print{.sidebar,.topbar,footer,.action-row,.day-tabs,.meal-actions,.assumptions,.plan-issues,.view[hidden],#toast,dialog{display:none!important}.app-shell{display:block}main{max-width:none;padding:0}.view:not([hidden]){display:block}.meal-card,.energy-summary{break-inside:avoid}.meal-grid{display:block}.meal-card{margin:15px 0;border-color:#aaa}.day-print{display:block!important}.page-heading h1{font-size:2rem}body{background:white;color:black}.shopping-item{break-inside:avoid}.shopping-item input{display:none}.shopping-item{grid-template-columns:1fr auto}.local-badge{display:none}}
+
+/* Farbschema und Stil aus der Präsentation „Wochenplan-App“: Marineblau, Creme, Koralle, Gelb, Grün. Keine externen Schriften. */
+:root{--navy:#1F2A44;--navy2:#2E3B5E;--cream:#FFF8EC;--coral:#FF5A36;--coral-text:#C8411F;--yellow:#FFC93C;--green:#2BB58A;--ink:#1F2A44;--forest:#1F2A44;--muted:#5C6680;--line:#EEDFC8;--orange:#C8411F;--blue:#1F2A44;--viz-text:#1F2A44;--viz-muted:#5C6680;--viz-border:#EEDFC8;--viz-accent:#FF5A36;--viz-accent-bg:#FFE7DF;font-family:Nunito,"Segoe UI",ui-rounded,system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--cream)}
+body{background:var(--cream)}
+h1,h2,.meal-body h3,.recipe-card h3,.energy-stat strong,.hero-stamp>span,.brand-mark,.meal-banner .food-word{font-family:Arial,"Helvetica Neue",Helvetica,"Segoe UI",sans-serif;font-weight:800;letter-spacing:-.02em}
+h1{letter-spacing:-.03em}
+.hero h1 em{font-style:normal;color:var(--coral-text)}
+.tiny-label,.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-weight:800}
+.hero .eyebrow,.page-heading .eyebrow{color:var(--coral-text)}
+a{color:var(--navy)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline-color:var(--coral)}
+input,select,textarea{border-color:#E3D3BA;border-radius:10px}
+input[type=checkbox],input[type=radio]{accent-color:var(--coral)}
+/* Seitenleiste wie die dunklen Folien */
+.sidebar{background:var(--navy);color:#F4EFE6;border-right:0}
+.brand{color:#fff}
+.brand-mark{background:var(--coral);color:#fff;border-radius:50%;font-size:1.7rem}
+.side-caption{color:#AEB6CC}
+.nav-button{color:#E4E8F2}
+.nav-button:hover{background:var(--navy2)}
+.nav-button.active{background:var(--coral);color:var(--navy);font-weight:700}
+.side-note{border-top-color:#3A4870}
+.side-note .tiny-label{color:var(--yellow)}
+.side-note p{color:#C3C9DA}
+.sidebar .button,.sidebar .button.primary{background:var(--yellow);border-color:var(--yellow);color:var(--navy);font-weight:800}
+.sidebar .button:hover{background:#FFD566}
+.privacy-note,.privacy-note span:not(.status-dot){color:#AEB6CC}
+.status-dot{background:var(--green)}
+/* Kopfzeile, Knöpfe */
+.topbar{border-bottom-color:var(--line)}
+.crumb,.local-badge,.text-button{color:var(--muted)}
+.button{border:2px solid var(--navy);background:transparent;border-radius:12px;font-weight:700;color:var(--navy)}
+.button:hover{background:#fff}
+.button.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.button.primary:hover{background:var(--navy2)}
+.hero p,.page-heading p{color:var(--muted)}
+.hero-stamp{background:var(--yellow);border:0;color:var(--navy);transform:rotate(6deg)}
+/* Zahlenkarten wie Folie „Ein Knoten genauer“ */
+.energy-summary{border:0;background:transparent;gap:14px}
+.energy-stat{border:0!important;border-radius:16px;background:var(--navy2);color:#fff}
+.energy-stat span{color:var(--yellow);font-weight:700}
+.energy-stat small{color:#C3C9DA}
+.energy-stat strong{color:#fff;font-size:2.3rem}
+.energy-stat:nth-child(2){background:var(--coral)}
+.energy-stat:nth-child(3){background:var(--green)}
+.energy-stat:nth-child(n+2) span,.energy-stat:nth-child(n+2) strong,.energy-stat:nth-child(n+2) small{color:var(--navy)}
+.plan-conclusion{color:var(--muted)}
+/* Tage */
+.day-tabs{border-bottom-color:var(--line)}
+.day-tab{border:2px solid var(--line);background:#fff;color:var(--muted);border-radius:12px;font-weight:700}
+.day-tab[aria-selected=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+/* Gerichte */
+.meal-card{border:0;border-radius:16px;background:#fff;box-shadow:0 2px 0 #EEDFC8}
+.meal-banner{min-height:70px;background:var(--coral)}
+.meal-card:nth-child(2n) .meal-banner{background:var(--green)}
+.meal-card:nth-child(3n) .meal-banner{background:var(--yellow)}
+.meal-banner .tiny-label{color:var(--navy)}
+.pill{background:#ffffffcc;border:0;color:var(--navy);font-weight:700}
+.meal-details{color:var(--muted)}
+.macro-row{border-top-color:var(--line);color:var(--muted)}
+.macro-row strong{color:var(--navy)}
+.week-balance{border-top-color:var(--line)}
+.balance-table th,.balance-table td{border-bottom-color:var(--line)}
+/* Rezepte wie die dunklen Karten der Lösungs-Folie */
+.recipe-card{border:0;border-radius:16px;background:var(--navy);color:#fff}
+.recipe-card:hover{background:var(--navy2);border-color:transparent}
+.recipe-card .tiny-label{color:var(--yellow)}
+.recipe-card .muted{color:#C3C9DA}
+.empty-state{background:#fff;border-radius:18px}
+/* Einkaufsliste */
+.shopping-intro{background:#FFEFC4;border-radius:14px}
+.shopping-list{border:0;border-radius:16px}
+.shopping-item{border-bottom-color:var(--line)}
+.shopping-item:has(input:checked){background:var(--cream)}
+.shopping-item:has(input:checked) .item-name{color:#9AA0B2}
+/* Dialog, Meldungen */
+dialog{background:#fff;border:0;border-radius:18px}
+dialog::backdrop{background:#1F2A4499}
+#toast{background:var(--navy);border-color:var(--navy)}
+.warning{background:#FFE7DF;border-left-color:var(--coral)}
+.assumptions{background:#FFF1CF;border-color:#F2DCA0}
+footer{border-top-color:var(--line);color:var(--muted)}
+footer>span:first-child{color:var(--navy)}
+/* Profil-Maske */
+#ra-profile .ra-section{border:0;border-radius:16px;box-shadow:0 2px 0 #EEDFC8}
+#ra-profile .ra-green{background:#E3F6EF}
+#ra-profile .ra-head[aria-expanded=true] .ra-chevron{color:var(--coral)}
+#ra-status{background:#FFEFC4;border-color:#F2DCA0;color:var(--navy);font-weight:700}
+#ra-profile .ra-choice{border-color:#E3D3BA;background:#fff;border-radius:10px}
+#ra-profile .ra-choice:has(input:checked){border-color:var(--coral);box-shadow:inset 0 0 0 1px var(--coral);background:#FFE7DF}
+#ra-profile .ra-choice input{accent-color:var(--coral)}
+#ra-profile .ra-rate button.active{background:#FFE7DF;border-color:var(--coral);box-shadow:inset 0 0 0 1px var(--coral);color:var(--navy);font-weight:800}
+#ra-profile .meal-toggle[aria-pressed=true]{background:var(--green);border-color:var(--green);color:var(--navy);font-weight:800}
+#ra-profile #ra-finish{background:var(--coral);color:var(--navy);font-weight:800;border-radius:12px}
+#ra-profile>section:last-of-type{background:#E3F6EF;border-color:#BFE8D9}
+#ra-profile .ra-progress{background:#F3E6D0}
+#ra-profile .ra-progress>div{background:var(--coral)}
+#ra-profile th,#ra-profile td{border-bottom-color:var(--line)}
