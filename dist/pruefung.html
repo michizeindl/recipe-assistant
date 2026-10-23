@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe Assistant – Installationsprüfung</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#1F2A44">
+<style>
+:root{color-scheme:light}
+body{margin:0;background:#FFF8EC;color:#1F2A44;font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font:800 1.5rem Arial,Helvetica,sans-serif;margin:8px 0 4px}
+p{margin:0 0 12px;color:#5C6680}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #EEDFC8}
+li b{flex:0 0 26px;font-size:1.15rem}
+li span{flex:1;overflow-wrap:anywhere}
+.ok b{color:#1d8a68}.warn b{color:#C8411F}.info b{color:#5C6680}
+#stand{font-weight:700;color:#C8411F}
+small{color:#5C6680;overflow-wrap:anywhere;display:block;margin-top:14px}
+</style>
+</head>
+<body>
+<main>
+<h1>Installationsprüfung</h1>
+<p>Bitte 20 Sekunden warten, bis unten „Fertig“ steht, dann ein Bildschirmfoto machen (bei Bedarf zwei, nach unten gewischt).</p>
+<p id="stand">Prüfung läuft…</p>
+<ul id="liste"></ul>
+<small id="ua"></small>
+</main>
+<script>
+const liste = document.getElementById('liste');
+const zeile = (art, text) => { const li = document.createElement('li'); li.className = art; li.innerHTML = '<b>' + ({ ok: '✓', warn: '✗', info: '•' })[art] + '</b><span></span>'; li.lastChild.textContent = text; liste.append(li); };
+let angebot = false;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); angebot = true; });
+document.getElementById('ua').textContent = navigator.userAgent;
+(async () => {
+  zeile(isSecureContext ? 'ok' : 'warn', 'Sichere Verbindung (https): ' + (isSecureContext ? 'ja' : 'nein'));
+  zeile(matchMedia('(display-mode: standalone)').matches ? 'info' : 'ok', 'Geöffnet als: ' + (matchMedia('(display-mode: standalone)').matches ? 'installierte App' : 'Browser-Tab'));
+  // Startseite: enthält sie den Verweis auf das Manifest?
+  try {
+    const html = await (await fetch('./', { cache: 'no-store' })).text();
+    zeile(/rel="manifest"/.test(html) ? 'ok' : 'warn', 'Startseite verweist auf App-Beschreibung: ' + (/rel="manifest"/.test(html) ? 'ja' : 'NEIN'));
+  } catch (e) { zeile('warn', 'Startseite nicht ladbar: ' + e.message); }
+  // Manifest
+  let m = null;
+  try {
+    const r = await fetch('./manifest.webmanifest', { cache: 'no-store' });
+    zeile(r.ok ? 'ok' : 'warn', 'App-Beschreibung geladen: ' + r.status + ' – ' + (r.headers.get('content-type') || '?'));
+    m = await r.json();
+    zeile('ok', 'Name: ' + m.name + ' / Kurzname: ' + m.short_name);
+    zeile(m.display === 'standalone' ? 'ok' : 'warn', 'Anzeige: ' + m.display + ' – Start: ' + m.start_url + ' – Bereich: ' + m.scope);
+  } catch (e) { zeile('warn', 'App-Beschreibung fehlerhaft: ' + e.message); }
+  // Icons
+  if (m) for (const i of m.icons || []) {
+    try {
+      const r = await fetch(i.src, { cache: 'no-store' }); const bmp = await createImageBitmap(await r.blob());
+      zeile(r.ok ? 'ok' : 'warn', 'Icon ' + i.src + ': ' + r.status + ', ' + bmp.width + '×' + bmp.height + ', ' + (i.purpose || 'any'));
+    } catch (e) { zeile('warn', 'Icon ' + i.src + ' nicht lesbar: ' + e.message); }
+  }
+  // Offline-Dienst (Service Worker)
+  if ('serviceWorker' in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js');
+      await Promise.race([navigator.serviceWorker.ready, new Promise(r => setTimeout(r, 8000))]);
+      zeile(reg.active ? 'ok' : 'warn', 'Offline-Dienst: ' + (reg.active ? 'aktiv' : 'nicht aktiv') + ' – Bereich ' + reg.scope);
+      zeile(navigator.serviceWorker.controller ? 'ok' : 'info', 'Seite vom Offline-Dienst gesteuert: ' + (navigator.serviceWorker.controller ? 'ja' : 'noch nein (beim 2. Laden ja)'));
+    } catch (e) { zeile('warn', 'Offline-Dienst Fehler: ' + e.message); }
+  } else zeile('warn', 'Offline-Dienst wird vom Browser nicht unterstützt');
+  // Installationsangebot des Browsers abwarten
+  if (navigator.getInstalledRelatedApps) {
+    try { const a = await navigator.getInstalledRelatedApps(); zeile('info', 'Bereits installierte zugehörige Apps: ' + a.length); } catch (e) {}
+  }
+  await new Promise(r => setTimeout(r, 12000));
+  zeile(angebot ? 'ok' : 'warn', 'Browser bietet Installation an (beforeinstallprompt): ' + (angebot ? 'JA' : 'NEIN'));
+  const s = document.getElementById('stand'); s.textContent = 'Fertig – jetzt Bildschirmfoto machen.'; s.style.color = '#1d8a68';
+})();
+</script>
+</body>
+</html>
