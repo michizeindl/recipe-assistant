@@ -1,6 +1,6 @@
 {
-  "name": "Recipe Assistant – Wochenplan",
-  "short_name": "Wochenplan",
+  "name": "Recipe Assistant",
+  "short_name": "Recipe Assistant",
   "description": "Wochenplan, Rezepte und Einkaufsliste – alles im Browser, ohne Konto.",
   "lang": "de",
   "start_url": "./",
