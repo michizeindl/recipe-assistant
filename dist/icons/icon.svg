@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="0" fill="#1F2A44"/>
+  <!-- großer Kreis mit r. wie das Logo der App -->
+  <circle cx="256" cy="292" r="142" fill="#FF5A36"/>
+  <text x="248" y="362" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="220" fill="#FFF8EC">r.</text>
+  <!-- die drei Punkte der Titelfolie -->
+  <circle cx="176" cy="92" r="24" fill="#FF5A36"/>
+  <circle cx="256" cy="92" r="24" fill="#FFC93C"/>
+  <circle cx="336" cy="92" r="24" fill="#2BB58A"/>
+</svg>
