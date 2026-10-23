@@ -1,16 +1,26 @@
-// Offline-Fähigkeit für die installierte App. Immer zuerst das Netz fragen, damit neue Fassungen sofort ankommen;
-// nur ohne Verbindung die zuletzt geladene Fassung aus dem Zwischenspeicher nehmen. Es werden nur eigene Dateien gespeichert.
-const CACHE = 'wochenplan-v1';
-const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'engine.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/favicon.svg'];
-self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
+// Service Worker von „Recipe Assistant“: macht die App auf Android installierbar und hält die zuletzt geladenen
+// Dateien für den Fall ohne Netz bereit. Aufbau wie bei „Akten & Action“.
+// Strategie „zuerst Netz“: jede Anfrage geht ans Netz (neue Fassungen kommen sofort an); nur ohne Netz antwortet die Kopie.
+// Nur eigene Dateien, keine fremden Server, kein Tracking. Bei Änderungen VERSION erhöhen.
+const PREFIX = 'recipe-assistant-';
+const VERSION = PREFIX + 'v2';
+
+self.addEventListener('install', () => self.skipWaiting());
+
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys()
+    .then(namen => Promise.all(namen.filter(n => (n.startsWith(PREFIX) || n.startsWith('wochenplan-')) && n !== VERSION).map(n => caches.delete(n))))
+    .then(() => self.clients.claim()));
 });
+
 self.addEventListener('fetch', e => {
-  const url = new URL(e.request.url);
-  if (e.request.method !== 'GET' || url.origin !== location.origin) return;
-  e.respondWith(fetch(e.request).then(res => {
-    if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
-    return res;
-  }).catch(() => caches.match(e.request, { ignoreSearch: true }).then(r => r || caches.match('index.html'))));
+  const anfrage = e.request;
+  if (anfrage.method !== 'GET' || new URL(anfrage.url).origin !== self.location.origin) return;
+  e.respondWith(fetch(anfrage).then(antwort => {
+    if (antwort.status === 200 && antwort.type === 'basic' && !anfrage.headers.has('range')) {
+      const kopie = antwort.clone();
+      e.waitUntil(caches.open(VERSION).then(c => c.put(anfrage, kopie)).catch(() => {}));
+    }
+    return antwort;
+  }).catch(() => caches.open(VERSION).then(c => c.match(anfrage)).then(treffer => treffer || Response.error())));
 });
